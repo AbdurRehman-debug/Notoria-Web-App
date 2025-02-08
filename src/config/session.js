@@ -3,14 +3,14 @@ env.config();
 
 export const sessionConfig = {
     secret: process.env.MY_TOP_SECRET,
-    resave: true,
-    saveUninitialized: false,
+    resave: false,          // Changed to false
+    saveUninitialized: true, // Changed to true for OAuth flow
     cookie: { 
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production' || process.env.CALLBACK_URL?.includes('https'),
-        sameSite: 'lax',
+        secure: true,       // Always true since Render uses HTTPS
+        sameSite: 'none',   // Changed to 'none' for cross-site OAuth
         maxAge: 24 * 60 * 60 * 1000
     },
     name: 'sessionId',
-    proxy: true  // Add this line to trust the proxy
+    proxy: true
 }

@@ -15,6 +15,7 @@ env.config();
 const app = express();
 const port = 3000;
 app.set('trust proxy', 1);
+app.enable('trust proxy');
 // Middleware setup
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
