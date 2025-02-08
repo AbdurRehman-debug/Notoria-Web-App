@@ -1,0 +1,17 @@
+<%- include("partials/header.ejs") %>
+<div class="container d-flex justify-content-center align-items-center" style="height: 90vh;" >
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-xxl-12"><h3>Enter email</h3></div> <br>
+        <div class="col-xxl-12 col-sm-12 col-md-8 col-lg-6">
+            <form action="/auth/resend_verification" method="post">
+            <div class="input-group mb-3">
+                <span class="input-group-text" >@</span>
+                <input type="text" class="form-control" placeholder="email" aria-label="Username" name="username" aria-describedby="basic-addon1" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Send Code</button>
+            </form> 
+            
+        </div> 
+        </div>
+    </div>

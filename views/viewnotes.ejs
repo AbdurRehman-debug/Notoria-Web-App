@@ -1,0 +1,37 @@
+<%- include("partials/header.ejs") %>
+<%- include("partials/sidebar.ejs") %>
+<style>
+    .elipse {
+        max-width: 45vw;
+  /* Adjust the width as needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+    }
+    
+</style>
+<div class="notes-container" style="padding: 10px;">
+    <% if(locals.ResultsDB && locals.ResultsDB.length >0) {
+
+       ResultsDB.forEach(element => {%>
+        <form method="post">
+        <div class="list-notes d-flex justify-content-between">
+    <ul class="list-group me-2" style="max-width: fit-content;">
+            <li class="list-group-item"><h6 id="<%=element.id%>" class="elipse"><%=element.title%> </h6></li>
+            <input hidden type="number" name="idUser" value="<%=element.user_id%>">
+            <input hidden type="number" name="idNote" value="<%=element.id%>">
+      </ul>
+      <div class="buttons">
+        <button type="submit" class="btn  btn-primary me-2" formaction="/notes/viewnote/<%=element.id%>">View</button>
+        <button  type="submit" class="btn btn-danger" formaction="/notes/deletenote">Delete</button>
+      </div>
+  </div>
+  <hr>
+</form>
+      <% });
+  
+ } else{%> 
+    <h3>No notes found</h3>
+  <% } %>
+     
+</div>

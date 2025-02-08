@@ -1,0 +1,154 @@
+<%- include("partials/header.ejs") %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Input</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Stylesheet -->
+<style>
+    .container-otp {
+  width: 90%;
+  max-width: 28em;
+  padding: 2em;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border-radius: 0.8em;
+ 
+}
+
+.inputfield {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.input-otp {
+  height: 3rem;
+  width: 3rem;
+  border: 2px solid #dad9df;
+  outline: none;
+  text-align: center;
+  font-size: 1.5rem;
+  border-radius: 0.3em;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Hide number field arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-otp:focus {
+  border: 3px solid #ffb800;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+  .container-otp {
+    width: 95%;
+    padding: 1.5em;
+  }
+
+  .inputfield {
+    gap: 0.3em;
+  }
+
+  .input-otp {
+    height: 2.5rem;
+    width: 2.5rem;
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .container-otp {
+    width: 90%;
+    padding: 1em;
+  }
+
+  .inputfield {
+    justify-content: center;
+    gap: 0.2em;
+  }
+
+  .input-otp {
+    height: 2.2rem;
+    width: 2.2rem;
+    font-size: 1rem;
+  }
+}
+
+</style>
+  </head>
+  <body>
+    <div class="container-otp">
+      <div class="inputfield">
+        <form action="/auth/verify-otp" method="post" onsubmit="combineOTP()">
+          <h6>Kindly check your gmail for the code. it will expire in 10 minutes</h6> <br>
+            <input type="number" id="otp1" maxlength="1" class="input-otp" oninput="moveNext(this, 'otp2')" onkeydown="handleBackspace(event, null, 'otp2')"/>
+            <input type="number" id="otp2" maxlength="1" class="input-otp" oninput="moveNext(this, 'otp3')" onkeydown="handleBackspace(event, 'otp1', 'otp3')"/>
+            <input type="number" id="otp3" maxlength="1" class="input-otp" oninput="moveNext(this, 'otp4')" onkeydown="handleBackspace(event, 'otp2', 'otp4')"/>
+            <input type="number" id="otp4" maxlength="1" class="input-otp" onkeydown="handleBackspace(event, 'otp3', null)" />
+            <input type="hidden" name="otp" id="otp">
+            <br> <br>
+            <button type="submit" class="btn btn-primary mb-3">Submit</button> <br>
+          </form> <br>
+          </div>
+          <div>
+          <form action="/auth/resend_verification" method="post">
+            <input type="email" hidden value="<%=locals.useremail%>" name="username">
+            <h6>Didnt receive code ?</h6>
+            <button type="submit" class="btn btn-danger">Resend Code</button>
+          </form>
+      </div>
+
+    </div>
+    <!-- Script -->
+    <script>
+        function moveNext(current, nextId) {
+    if (current.value.length === 1) {
+        document.getElementById(nextId)?.focus();
+    }
+}
+
+function handleBackspace(event, prevId, nextId) {
+    if (event.key === "Backspace" && event.target.value === "") {
+        if (prevId) {
+            document.getElementById(prevId)?.focus();
+            document.getElementById(prevId).value = ""; // Clear previous input
+        }
+        event.preventDefault(); // Prevent default backspace behavior
+    }
+}
+
+function combineOTP() {
+    const otp1 = document.getElementById('otp1').value;
+    const otp2 = document.getElementById('otp2').value;
+    const otp3 = document.getElementById('otp3').value;
+    const otp4 = document.getElementById('otp4').value;
+    
+    // Check if all digits are entered
+    if (!otp1 || !otp2 || !otp3 || !otp4) {
+        alert('Please enter all 4 digits');
+        return false;
+    }
+    
+    const combinedOTP = otp1 + otp2 + otp3 + otp4;
+    document.getElementById('otp').value = combinedOTP;
+    return true;
+}
+    </script>
+  </body>
+</html>

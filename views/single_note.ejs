@@ -1,0 +1,217 @@
+<%- include("partials/header.ejs") %>
+<%- include("partials/sidebar.ejs") %>
+
+<style>
+  /* Notes main container */
+.notes-main {
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Container styles */
+.notes-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Form styles */
+.notes-form {
+  width: 100%;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+
+}
+
+/* Input and content area styles */
+.content-area {
+  width: 100%;
+  min-height: 2.5rem;
+  border: 1px solid var(--line-clr);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  
+  /* Add these new properties */
+  white-space: pre-wrap;      
+  word-wrap: break-word;      
+  overflow-wrap: break-word;  
+  overflow: auto;            
+  max-width: 100%;           
+  display: block;           
+}
+
+.content-area[contenteditable="true"] {
+  border-color: var(--accent-clr);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(94, 99, 255, 0.25);
+}
+
+/* Title styles */
+.note-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+/* Button styles */
+.btn-container {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+
+
+
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+  .notes-main {
+    padding: 1rem;
+    margin-bottom: 70px; /* Space for mobile nav */
+  }
+  
+  .notes-container {
+    padding: 0.5rem;
+  }
+  
+  .note-title {
+    font-size: 1.25rem;
+  }
+  
+  .content-area {
+    padding: 0.5rem;
+  }
+}
+</style>
+
+
+<main class="notes-main">
+  <div class="notes-container">
+    <form action="/notes/editnotes" method="post" id="form" class="notes-form">
+      <% if (locals.oneNote && locals.oneNote !== null) { %>
+        <div class="btn-container d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary edit">Edit</button>
+          <button type="submit" class="btn btn-warning update" hidden>Update</button>
+        </div>
+         <% oneNote.forEach(note => { %>
+            <input type="hidden" name="noteID" value="<%=note.id%>">
+            <input type="hidden" name="userID" value="<%=note.user_id%>">
+            
+            <div class="form-group">
+              <h3>Title</h3>
+              <h4 class="note-title content-area" contenteditable="false"><%= note.title %></h4>
+              <input type="hidden" id="hiddenTitle" name="titleUpdated" value="<%=note.title%>">
+            </div>
+            
+            <% if (note.description && note.description !== null) { %>
+              <div class="form-group">
+                <label for="descSingle" class="form-label">Description</label>
+                <div id="descSingle" 
+                     class="content-area"
+                     contenteditable="false"
+                     name="Ai"><%= note.description %></div>
+                <input type="hidden" id="hiddenDesc" name="descUpdated" value="<%=note.description%>">
+              </div>
+            <% } %>
+
+            <% if (note.ai_response) { %>
+              <div class="form-group">
+                <label for="aiResponseSingle" class="form-label">Ai Response</label>
+                <div id="aiResponseSingle" 
+                     class="content-area"
+                     contenteditable="false"
+                     name="Ai"><%- note.ai_response %></div>
+                <input type="hidden" id="hiddenAi" name="AiUpdated" value="<%= note.ai_response %>">
+              </div>
+            <% } %>
+      <% }); } %>
+      
+     
+    </form>
+  </div>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const title = document.querySelector(".note-title");
+  const description = document.querySelector("#descSingle");
+  const aiResponse = document.querySelector("#aiResponseSingle");
+  const form = document.querySelector("#form");
+
+  function adjustHeight(element) {
+    if (!element) return;
+    element.style.height = 'auto';
+    element.style.height = `${element.scrollHeight}px`;
+  }
+
+  [description, aiResponse].forEach(el => {
+    if (el) adjustHeight(el);
+  });
+
+  document.querySelector(".edit").addEventListener("click", () => {
+    const elements = [title, description, aiResponse];
+    elements.forEach(el => {
+      if (el) {
+        el.contentEditable = "true";
+        el.classList.add("editing");
+      }
+    });
+    document.querySelector(".update").removeAttribute("hidden");
+  });
+
+  form.addEventListener("submit", (event) => {
+    if (title) {
+      const titleContent = title.innerHTML.replace(/&nbsp;/g, ' ').trim();
+      if (!titleContent) {
+        event.preventDefault();
+        alert("Title cannot be empty");
+        window.location.reload();
+        return;
+      }
+      document.getElementById("hiddenTitle").value = titleContent;
+    }
+    
+    if (description) {
+      document.getElementById("hiddenDesc").value = description.innerHTML.trim();
+    }
+    
+    if (aiResponse) {
+      document.getElementById("hiddenAi").value = aiResponse.innerHTML.trim();
+    }
+  });
+
+  const resizeObserver = new ResizeObserver(entries => {
+    entries.forEach(entry => {
+      adjustHeight(entry.target);
+    });
+  });
+
+  [description, aiResponse].forEach(el => {
+    if (el) resizeObserver.observe(el);
+  });
+});
+</script>

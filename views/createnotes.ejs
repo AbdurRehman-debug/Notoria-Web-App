@@ -1,0 +1,58 @@
+<%- include("partials/header.ejs") %>
+<%- include("partials/sidebar.ejs") %>
+<main>
+    <form id="userinput" method="post">
+        <div class="mb-4">
+          <label for="exampleInputEmail1" class="form-label">Title</label>
+          <input name="title" type="text" class="form-control" id="exampleInputEmail1" placeholder="What is SQL?" aria-describedby="emailHelp" maxlength="50" required value="<% if(locals.titleback && locals.titleback !== null) { %><%=locals.titleback%><% } %>">
+        </div>
+        <div class="mb-3">
+            <label for="floatingTextarea" >Description</label>
+            <textarea style="height: 150px;" name="desc" class="form-control" placeholder="SQL (Structured Query Language) is used for managing and manipulating relational databases." id="floatingTextarea" ><% if(locals.descback && locals.descback !== null) { %><%=locals.descback%><% } %></textarea><br>
+            <% if(locals.aiResponse && aiResponse !== null){ %>
+              <label for="aiResponse" class="form-label">AI Response (editable)</label> <br>
+              <div contenteditable="true" id="aiResponse" class="form-control"style="white-space: pre-wrap; min-height: 50px; max-height: 350px; overflow-y: scroll; word-wrap: break-word; width: 100%; box-sizing: border-box;"
+              ><%- aiResponse %></div>
+              <input type="hidden" name="Ai" id="aiResponseInput" value="<%= aiResponse %>">
+            <% } %>
+          </div>
+        <button type="submit" class="btn btn-primary me-2" formaction="/notes/savenote">SAVE Note</button>
+        <button id="aibtn" type="submit" class="btn btn-success" formaction="/notes/askai">Ask Ai</button>
+    </form> <br>
+    <div  style="display: flex; justify-content: center;"><span class="loader"></span>
+    </div>
+    
+</main>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const aiButton = document.getElementById("aibtn");
+    const loader = document.querySelector(".loader");
+    let title = document.getElementById("exampleInputEmail1");
+
+    aibtn.addEventListener("click", (event)=>{
+      if(!title.value.trim()){
+        alert("Title is required");
+        event.preventDefault();
+        return
+      }
+      if(title.value !== null && title.value !== ""){
+        loader.style.display = "block";
+      }
+     
+    })
+    const textarea = document.getElementById("aiResponse");
+    if (textarea) {
+      adjustHeight(textarea);
+    }
+;
+   
+    
+ 
+  });
+
+  function adjustHeight(textarea) {
+    textarea.style.height = "auto";  // Reset height to recalculate
+    textarea.style.height = textarea.scrollHeight + "px";  // Set new height
+  }
+</script>

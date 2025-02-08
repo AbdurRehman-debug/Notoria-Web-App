@@ -1,0 +1,71 @@
+<%- include("partials/header.ejs") %>
+<div class="container d-flex justify-content-center align-items-center" style="height: 90vh;" >
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-xxl-12"><h3>Sign Up</h3></div> <br>
+        <div class="col-xxl-12 col-sm-12 col-md-8 col-lg-6">
+            <form action="/auth/register" method="post" class="frm">
+            <div class="input-group mb-3">
+                <span class="input-group-text" >@</span>
+                <input type="email" class="form-control" placeholder="email" aria-label="Username" aria-describedby="basic-addon1" name="username" required id="username" maxlength="50">
+              </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" >🔒</span>
+                <input type="password" class="form-control" placeholder="password" aria-label="Username" aria-describedby="basic-addon1" name="password" id="password" required minlength="8" maxlength="12">
+              </div> <h6>Confirm Password</h6>
+            <div class="input-group mb-3">
+                <span class="input-group-text" >🔒</span>
+                <input type="password" class="form-control" placeholder="password" aria-label="Username" aria-describedby="basic-addon1" name="passwordC" id="passwordConfirm" required minlength="8" maxlength="12">
+              </div>
+              <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form> 
+            <br> 
+        </div> 
+   
+    </div>
+</div>
+
+
+<script>
+   document.querySelector(".frm").addEventListener("submit", (e) => {
+  const userinputem = document.querySelector("#username").value.trim().toLowerCase();  // Fixed toLowerCase
+  const userinputpw = document.querySelector("#password").value.trim();
+  const ConfirmPassword = document.querySelector("#passwordConfirm").value
+
+  // Email and Password Patterns
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^\w\d\s]).{8,}$/;  // Updated regex for password
+
+  // Validation Checks
+  if (!userinputem) {
+    alert("Email cannot be empty or just spaces.");
+    e.preventDefault();
+    return;
+  }
+
+  if (!emailPattern.test(userinputem)) {
+    alert("Invalid email format. Please enter a valid email (e.g., example@example.com).");
+    e.preventDefault();
+    return;
+  }
+
+  if (!userinputpw) {
+    alert("Password cannot be empty or just spaces.");
+    e.preventDefault();
+    return;
+  }
+
+  if (!passwordPattern.test(userinputpw)) {
+    alert("Password must be at least 8 characters long and include letters, numbers, and special characters");
+    e.preventDefault();
+    return;
+  }
+  if(userinputpw!==ConfirmPassword){
+    alert("Passwords do not match");
+    e.preventDefault();
+    return;
+  }
+});
+
+</script>
+
+  

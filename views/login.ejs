@@ -1,0 +1,40 @@
+<%- include("partials/header.ejs") %>
+<div class="container d-flex justify-content-center align-items-center" style="height: 90vh;" >
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-xxl-12"><h3>Log In</h3></div> <br>
+        <div class="col-xxl-12 col-sm-12 col-md-8 col-lg-6 mb-3">
+            <form action="/auth/login" method="post">
+            <div class="input-group mb-3">
+                <span class="input-group-text" >@</span>
+                <input type="text" class="form-control" placeholder="email" aria-label="Username" name="username" aria-describedby="basic-addon1" required>
+              </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" >🔒</span>
+                <input type="password" class="form-control" placeholder="Password" aria-label="Username" name="password" aria-describedby="basic-addon1" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Log In</button>
+            </form> 
+            <br> 
+            <h6>Don't Have An Account? </h6> <a  href="/auth/registerpage">SignUp</a> <br> <br>
+             <a href="/auth/forgot">Forgot password?</a> <br>
+        </div> <br>
+        <% if (locals.verification !== null && locals.verification) { %>
+            <h5 style="color: red;"><%=verification%></h5>
+        <% } %>
+        <% if (locals.need_otp_verify === true && locals.need_otp_verify!== null) { %>
+            <h5 style="color: red;">Verify your email</h5> <br>
+            <a href="/auth/verify_mistake"><button class="btn btn-secondary" style="max-width: 20vw">Verify Now</button></a>
+        <% } %>
+        
+        <br>
+        <br>
+        <hr>
+        <br>
+        <h3 style="text-align:center ;">OR</h3>
+        <div class="col-xxl-6 gap-5 d-flex justify-content-center">
+            <form method="get" class="d-flex flex-wrap gap-3 justify-content-center" action="/auth/login/google">
+            <button type="submit" class="btn btn-dark"><img height="25px" width="25px" src="/images/google.png" alt=""></button>
+        </form>
+        </div>
+    </div>
+</div>
