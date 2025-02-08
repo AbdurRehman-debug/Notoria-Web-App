@@ -35,7 +35,7 @@ passport.use("local",new Strategy(async function verify(username,password,cb){
 passport.use("google", new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL:  "http://localhost:3000/auth/google/notoria",
+  callbackURL:  process.env.CALLBACK_URL||"http://localhost:3000/auth/google/notoria",
   proxy: true ,
   passReqToCallback: true
 },async (request, accessToken, refreshToken, profile, cb) => {
