@@ -27,16 +27,16 @@ Notoria is a full-featured note-taking web application built with **Node.js, Exp
 ### Installation  
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/notoria.git  
+git clone https://github.com/AbdurRehman-debug/Notoria-Web-App.git
 
 # Navigate to the project directory
-cd notoria  
+cd Notoria-Web-App
 
 # Install dependencies
 npm install  
 
 # Set up environment variables
-cp .env.example .env  
+
 # Add your PostgreSQL URL, Google API key, and other necessary variables  
 ```
 
