@@ -40,20 +40,20 @@ passport.use("google", new GoogleStrategy({
   passReqToCallback: true
 },async (request, accessToken, refreshToken, profile, cb) => {
   try{
+    console.log(profile);
     const userEmail = profile.emails[0].value;
-    const userpassword = await bcrypt.hash(process.env.USER_PASSWORD, saltRounds);
-    const checkUserExists = await db.query("SELECT * FROM users WHERE email = $1", [userEmail]);
+    const checkUserExists = await db.query("SELECT * FROM users WHERE email = $1 OR google_id = $2", [userEmail,profile.id]);
     if(checkUserExists.rows.length === 0){
       const newUser = await db.query(
-        "INSERT INTO users (email, password, is_verified) VALUES ($1, $2, $3) RETURNING *", 
-        [userEmail, userpassword, true]
+        "INSERT INTO users (email, is_verified, google_id,auth_provider) VALUES ($1, $2, $3, $4) RETURNING *", 
+        [userEmail,  true,  profile.id, "google"]
       );
       return cb(null, newUser.rows[0]);
     } else {
       // Update existing user's verification status
       const updatedUser = await db.query(
-        "UPDATE users SET is_verified = TRUE WHERE email = $1 RETURNING *",
-        [userEmail]
+        "UPDATE users SET is_verified = $1, google_id = $2, auth_provider = $3 WHERE email = $4 RETURNING *",
+        [true, profile.id, "google",userEmail]
       );
       
       return cb(null, updatedUser.rows[0]);
