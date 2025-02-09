@@ -40,7 +40,7 @@ passport.use("google", new GoogleStrategy({
   passReqToCallback: true
 },async (request, accessToken, refreshToken, profile, cb) => {
   try{
-    console.log(profile);
+    
     const userEmail = profile.emails[0].value;
     const checkUserExists = await db.query("SELECT * FROM users WHERE email = $1 OR google_id = $2", [userEmail,profile.id]);
     if(checkUserExists.rows.length === 0){
