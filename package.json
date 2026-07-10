@@ -27,6 +27,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.13.1",
     "response-time": "^2.3.3",
-    "sanitize-html": "^2.14.0"
+    "sanitize-html": "^2.14.0",
+    "@google/genai": "^2.11.0"
   }
 }
