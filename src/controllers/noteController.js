@@ -1,13 +1,15 @@
-import {GoogleGenerativeAI} from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import env from "dotenv";
 import { marked } from "marked";
 import {storeNotes,getNotes,getIdNote,updateNoteContent,deleteNotee} from "../utils/note_funcs.js";
 import sanitizeHtml from 'sanitize-html';
 
 env.config();
-const genAI = new GoogleGenerativeAI(process.env.SECRET_API_KEY);
 
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+const ai = new GoogleGenAI({ apiKey: process.env.SECRET_API_KEY });
+
+
+
 
 export const getCreateNotesPage = (req, res) => {
   
@@ -20,10 +22,17 @@ const now = new Date();
           const prompt = req.body.title + " " + req.body.desc;
           const titleinput = req.body.title || null;
           const description = req.body.desc ||null;
-          const result = await model.generateContent([prompt]);
+        const response = await ai.models.generateContent({
+    model: "gemini-3.5-flash",
+    contents: prompt,
+    config: {
+      systemInstruction:
+        "You are a helpful assistant that creates clear, engaging explainer content on AI and tech topics. Break down complex concepts simply, use analogies where useful, and keep a friendly, conversational tone suitable for a YouTube script.",
+    },
+  });
 
           // Ensure we await the response text
-          const aiText =  result.response.text();
+          const aiText = response.text
 
           // Convert Markdown to HTML
           const markedHtml = marked.parse(aiText);
